@@ -7,7 +7,11 @@ with sync_playwright() as p:
     errors = []
     page.on('pageerror', lambda error: errors.append(str(error)))
     page.goto(Path(__file__).with_name('index.html').as_uri())
-    page.wait_for_timeout(1200)
+    assert page.locator('.chicken-pixels i').count() == 64
+    page.wait_for_timeout(1300)
+    page.screenshot(path=str(Path(__file__).with_name('intro-check.png')))
+    page.wait_for_timeout(1500)
+    assert page.locator('#chicken-intro').count() == 0
     assert page.title() == 'Nijarr — Minecraft & Senyawa'
     assert page.locator('a[href="https://www.youtube.com/@NijarMC"]').count() == 2
     assert page.locator('.video-track > button:not([aria-hidden])').count() == 44
